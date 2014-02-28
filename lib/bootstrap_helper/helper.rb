@@ -30,13 +30,18 @@ module BootstrapHelper
     def notice_message
       flash_messages = []
       flash.each do |type, message|
-        type = :success if type == :notice
+        type = flash_type(type)
         text = content_tag(:div, link_to("x", "#", :class => "close", "data-dismiss" => "alert") + message, :class => "alert fade in alert-#{type}")
         flash_messages << text if message
       end
       flash_messages.join("\n").html_safe
     end
 
+    def flash_type(type)
+      type = :success if type == :notice
+      type = :danger if type == :alert
+      type
+    end
 
     def s(html)
       sanitize( html, :tags => %w(table thead tbody tr td th ol ul li div span font img sup sub br hr a pre p h1 h2 h3 h4 h5 h6), :attributes => %w(style src href size color) )
@@ -198,6 +203,8 @@ module BootstrapHelper
         @children << tag_node
       end
     end
+
+    private :flash_type
   end
 
 end
